@@ -8,5 +8,13 @@ services:
       - mongodata:/data/db
     ports:
       - "27017:27017"
+  demo:
+    image: hantsy/spring-native-demo
+    environment:
+      - "SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/blog"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
 volumes:
   mongodata:

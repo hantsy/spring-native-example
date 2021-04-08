@@ -1,4 +1,4 @@
-name: build-image
+name: build-docker-image
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  build-image:
+  build-docker-image:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,16 +31,14 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build Docker Image
-        run: mvn clean spring-boot:build-image -DskipTests -Pnative-image
+        run: mvn clean spring-boot:build-image -DskipTests -Pspring-native,build-docker-image
 
-      - name: Set up MongoDb
+      - name: Run App in Docker
         run: |
-          docker-compose up -d mongodb
+          docker-compose up -d
+          sleep 10
           docker ps -a
 
-      - name: Run app in Docker Container
-        run: docker run --rm demo:0.0.1-SNAPSHOT
-      
       - name: Run FunctionalTests
         run: |
-          mvn clean verify      
+          mvn test -Pfunctional-test

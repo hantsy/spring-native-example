@@ -33,10 +33,7 @@ public class PostRepositoryTest {
     public void testInsertAndQuery() {
         var data = Post.builder().title("testtitle").content("testcontent").build();
         this.template.insert(data)
-                .then().block(Duration.ofSeconds(5));
-        
-        this.posts.findAll()
-                .take(1)
+                .thenMany(this.posts.findAll()).takeLast(1)
                 .as(StepVerifier::create)
                 .consumeNextWith(p -> {
                             log.info("saved post: {}", p);

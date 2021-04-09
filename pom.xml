@@ -57,19 +57,29 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/FunctionalTests.*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M5</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/FunctionalTests.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>spring-native</id>
             <dependencies>
@@ -120,7 +130,6 @@
                             </image>
                         </configuration>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

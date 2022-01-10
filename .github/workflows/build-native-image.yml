@@ -8,8 +8,13 @@ on:
       - master
 
 jobs:
-  build-native-image:
-    runs-on: ubuntu-latest
+  build:
+    name: ${{ matrix.version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        version: [latest, dev, '21.3.0']
+        os: [ macos-latest, windows-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -17,38 +22,39 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
 
-      - uses: DeLaGuardo/setup-graalvm@4.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          # GraalVM version, no pattern syntax available atm
-          graalvm: '21.0.0.2'
-          # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
-          java: 'java11'
-          # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
-          arch: 'amd64'
-      - run: java -version
-      - name: Install native-image component
-        run: |
-          gu install native-image
+          version: ${{ matrix.version }}
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
+      - uses: docker-practice/actions-setup-docker@master
+        if: runner.os == 'MacOS'  
       - name: Set up MongoDB
         run: |
           docker-compose up -d mongodb
           sleep 10
           docker ps -a
 
-      - name: Build Native Image and Run Application
+      - name: Build Native Image & Run Application and FunctionalTests
         run: |
           mvn clean package -DskipTests -Pspring-native,build-native-image
           ./target/com.example.demo.demoapplication &
           sleep 10
-
-      - name: Run FunctionalTests
-        run: |
           mvn test -Pfunctional-test
+        if: runner.os != 'Windows'  
+
+      - name: Build Native Image & Run Application and FunctionalTests on Windows
+        run: |
+          mvn clean package -DskipTests -P "spring-native,build-native-image"
+          .\target\com.example.demo.demoapplication.exe &
+          sleep 10
+          mvn test -Pfunctional-test
+        if: runner.os == 'Windows'  
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: demoapplication-${{ matrix.os }}-${{ matrix.version }}
+          path: target/com.example.demo.demoapplication*  

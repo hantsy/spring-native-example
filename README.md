@@ -1,10 +1,13 @@
-# spring-native-example
-An example application built with Spring Native. Please [this blog entry](https://hantsy.medium.com/building-your-first-spring-native-application-ae169136e544) for details.
+# Spring Native Example
+
+An example application to demo Spring Native. 
+
+**Please read [this blog entry](https://hantsy.medium.com/building-your-first-spring-native-application-ae169136e544) for more details**.
 
 ## Prerequisites 
 
-* Java 11
-* Apache Maven 3.8.1
+* Java 17
+* Apache Maven 3.8.1+
 * Docker 
 * GraalVM 21 if building the application to native executable application by GraalVM native image
 
@@ -24,15 +27,15 @@ Or run the `DemoApplication` in your IDEs.
 $ mvn spring-boot:built-image -Pspring-native,build-docker-image
 ```
 
-Run the application in docker container.
+Run the application in the Docker container.
 
 ```bash
 $ docker run -rm  hantsy/spring-native-demo:latest
 ```
 
-### Build Executable Application
+### Build Native Executable Application
 
-> It requires installation of GraalVM.
+> It requires the installation of GraalVM.
 
 ```bash
 $ mvn clean package -Pspring-native,build-native-image
@@ -45,14 +48,13 @@ $ ./target/com.example.demo.demoapplication
 ```
 
 
-## Functional Tests
+## Smoke Tests
 
-When the application is running at *localhost:8080*,  you can perform a `FunctionalTests` to verify the APIs as a HTTP Client view.
+When the application is running at *[http://localhost:8080](http://localhost:8080)*,  there is a `FunctionalTests` that is used to verify the APIs from HTTP Client view.
 
 ```bash
 $ mvn clean test -Pfunctional-test
 ```
-
 
 ## Resource
 
@@ -62,4 +64,4 @@ $ mvn clean test -Pfunctional-test
 * [Spring Data Reactive MongoDB](https://docs.spring.io/spring-boot/docs/2.4.4/reference/htmlsingle/#boot-features-mongodb)
 * [Configure the Spring AOT Plugin](https://docs.spring.io/spring-native/docs/0.9.1/reference/htmlsingle/#spring-aot-maven)
 * [Get Started with GraalVM ](https://www.graalvm.org/docs/getting-started/#install-graalvm)
-* [IntelliJ IDEA 2021.1 EAP 5: WSL 2 Support for Maven and Gradle, Support for JSON Path, and More](https://blog.jetbrains.com/idea/2021/02/intellij-idea-2021-1-eap-5/)
+

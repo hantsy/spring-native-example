@@ -24,7 +24,7 @@ Or run the `DemoApplication` in your IDEs.
 ### Build Docker Image
 
 ```bash
-$ mvn spring-boot:built-image -Pspring-native,build-docker-image
+$ mvn spring-boot:build-image -Pspring-native,build-docker-image
 ```
 
 Run the application in the Docker container.

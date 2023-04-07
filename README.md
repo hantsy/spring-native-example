@@ -1,5 +1,7 @@
 # Spring Native Example
 
+> NOTE: This project is based on the legacy Spring Native project. Since Spring 6.0 and Spring Boot 3.0, spring native is part of the core framework.
+
 An example application to demo Spring Native. 
 
 **Please read [this blog entry](https://hantsy.medium.com/building-your-first-spring-native-application-ae169136e544) for more details**.
